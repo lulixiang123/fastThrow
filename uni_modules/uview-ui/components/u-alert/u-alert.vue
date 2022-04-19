@@ -1,62 +1,57 @@
 <template>
-	<u-transition
-	    mode="fade"
-	    :show="show"
+	<view
+	    class="u-alert"
+	    :class="[`u-alert--${type}--${effect}`]"
+	    @tap.stop="clickHandler"
+	    :style="[$u.addStyle(customStyle)]"
 	>
 		<view
-		    class="u-alert"
-		    :class="[`u-alert--${type}--${effect}`]"
-		    @tap.stop="clickHandler"
-		    :style="[$u.addStyle(customStyle)]"
+		    class="u-alert__icon"
+		    v-if="showIcon"
 		>
-			<view
-			    class="u-alert__icon"
-			    v-if="showIcon"
-			>
-				<u-icon
-				    :name="iconName"
-				    size="18"
-				    :color="iconColor"
-				></u-icon>
-			</view>
-			<view
-			    class="u-alert__content"
-			    :style="[{
-					paddingRight: closable ? '20px' : 0
-				}]"
-			>
-				<text
-				    class="u-alert__content__title"
-				    v-if="title"
-					:style="[{
-						fontSize: $u.addUnit(fontSize),
-						textAlign: center ? 'center' : 'left'
-					}]"
-				    :class="[effect === 'dark' ? 'u-alert__text--dark' : `u-alert__text--${type}--light`]"
-				>{{ title }}</text>
-				<text
-				    class="u-alert__content__desc"
-					v-if="description"
-					:style="[{
-						fontSize: $u.addUnit(fontSize),
-						textAlign: center ? 'center' : 'left'
-					}]"
-				    :class="[effect === 'dark' ? 'u-alert__text--dark' : `u-alert__text--${type}--light`]"
-				>{{ description }}</text>
-			</view>
-			<view
-			    class="u-alert__close"
-			    v-if="closable"
-			    @tap.stop="closeHandler"
-			>
-				<u-icon
-				    name="close"
-				    :color="iconColor"
-				    size="15"
-				></u-icon>
-			</view>
+			<u-icon
+			    :name="iconName"
+			    size="18"
+			    :color="iconColor"
+			></u-icon>
 		</view>
-	</u-transition>
+		<view
+		    class="u-alert__content"
+		    :style="[{
+				paddingRight: closable ? '20px' : 0
+			}]"
+		>
+			<text
+			    class="u-alert__content__title"
+			    v-if="title"
+				:style="[{
+					fontSize: $u.addUnit(fontSize),
+					textAlign: center ? 'center' : 'left'
+				}]"
+			    :class="[effect === 'dark' ? 'u-alert__text--dark' : `u-alert__text--${type}--light`]"
+			>{{ title }}</text>
+			<text
+			    class="u-alert__content__desc"
+				v-if="description"
+				:style="[{
+					fontSize: $u.addUnit(fontSize),
+					textAlign: center ? 'center' : 'left'
+				}]"
+			    :class="[effect === 'dark' ? 'u-alert__text--dark' : `u-alert__text--${type}--light`]"
+			>{{ description }}</text>
+		</view>
+		<view
+			  class="u-alert__close"
+			 v-if="closable"
+			 @tap.stop="closeHandler"
+		>
+			<u-icon
+			    name="close"
+			    :color="iconColor"
+			    size="15"
+			></u-icon>
+		</view>
+	</view>
 </template>
 
 <script>

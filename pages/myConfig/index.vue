@@ -9,7 +9,7 @@
 				 placeholder="请输入新密码" border="bottom" v-model="newPassword"/>
 		    </view>
 			<view id="changePasswordShowAreaButtons">
-				<u-button type="primary" @click="changePasswordShow=!changePasswordShow">确认</u-button>
+				<u-button type="primary" @click="changeUserPassword">确认</u-button>
 				<u-button type="primary" @click="changePasswordShow=!changePasswordShow">取消</u-button>
 			</view>
 		</u-popup>
@@ -32,7 +32,7 @@
 			</u-cell>
 			<u-cell>
 				<u-icon slot="icon" size="32" name="close-circle-fill" color="#3399ff"/>
-				<text slot="title" class="mineBottomItemText">退出账户</text>
+				<text slot="title" class="mineBottomItemText" @click="userOut">退出账户</text>
 			</u-cell>
 		</u-cell-group>
 	</view>
@@ -53,12 +53,27 @@
 			}
 		},
 		onLoad() {
-
+			this.getUserMessage()
 		},
 		methods: {
 			changePasswordAreaClose(){
 				console.log(1)
 				this.changePasswordShow=false
+			},
+			getUserMessage(){
+				//搜索用户信息
+				//传参: token
+				//返回: userMessage={userId:string,username:string,userGroup:string}
+			},
+			changeUserPassword(){
+				//修改用户密码
+				//传参: token
+				//返回: userMessage={userId:string,username:string,userGroup:string}
+				this.changePasswordShow=!this.changePasswordShow
+			},
+			userOut(){
+				//uni.removeStorageSync("token")
+				uni.reLaunch({url:"/pages/login/index"})
 			}
 		}
 	}

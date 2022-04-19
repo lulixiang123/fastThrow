@@ -3,36 +3,28 @@
 		<view id="questionaryName">{{questionary.questionName}}</view>
 		<view id="questionaryProblems">
 			<view class="questionaryProblem">
-				
-				<view class="ProblemMessage">
-				    {{problem[nowIndex].ProblemSort}}.({{problem[nowIndex].ProblemType}}) {{problem[nowIndex].ProblemName}}
-				</view>
-				
-				<view class="ProblemContent">
-					<template v-if="problem[nowIndex].ProblemType==='单选题'">
-						<u-radio-group v-model="radioValue" placement="column">
-						    <u-radio :customStyle="{marginBottom: '8px'}"  v-for="(item, index) in problem[nowIndex].ProblemOption" :key="index" :label="item" :name="item" />
-						</u-radio-group>
-					</template>
-					<template v-else-if="problem[nowIndex].ProblemType==='多选题'">
-						<u-checkbox-group v-model="checkboxValue" placement="column">
-						    <u-checkbox :customStyle="{marginBottom: '8px'}" v-for="(item, index) in problem[nowIndex].ProblemOption" :key="index" :label="item" :name="item" />
-						</u-checkbox-group>
-					</template>
-					<template v-else-if="problem[nowIndex].ProblemType==='填空题'">
-						<u--textarea v-model="textareaValue" placeholder="请输入..." autoHeight count maxlength="100"/>
-					</template>
-				</view>
-				
-			</view>
-			<view id="questionaryProblemsBtns">
-				<template v-if="nowIndex!==problem.length-1">
-					<u-button type="primary" text="下一题" @click="nowIndexNext()"/>
-				</template>
-				<template v-else>
-					<u-button type="primary" text="完成" @click="questionaryComplete()"/>
+				<template v-for="(item,index) in problemList">
+					<view class="questionaryProblemItem">
+						<view class="ProblemMessage">
+						    Q{{index+1}}【{{item.problemType}}】{{item.problemName}}
+						</view>
+						<view class="ProblemContent">
+						   <template v-if="item.problemType==='单选题'">
+							   <SingleChoiceQuestions :problemId="item.problemId"  @setSelect="setSelect"/>
+						   </template>
+						   <template v-else-if="item.problemType==='多选题'">
+							   <multipleChoiceQuestions :problemId="item.problemId" @setSelect="setSelect"/>
+						   </template>
+						   <template v-else-if="item.problemType==='填空题'">
+							   <fillBlankQuestions :problemId="item.problemId" @setSelect="setSelect"/>
+						   </template>
+						</view>
+					</view>
 				</template>
 			</view>
+		</view>
+		<view v-if="nowSuccess===problemList.length" id="questionarySubmitButton">
+			<u-button type="primary" text="提交问卷" @click="questionaryComplete"/>
 		</view>
 	</view>
 </template>
@@ -41,24 +33,10 @@
 	export default {
 		data() {
 			return {
-				problem:[{
+				problemList:[{
 					ProblemId:0,
 					ProblemName:"问题名字",
-					ProblemSort:1,
-					ProblemType:"单选题",
-					ProblemOption:["单选项A","单选项B","单选项C","单选项D"]
-				},{
-					ProblemId:1,
-					ProblemName:"问题名字",
-					ProblemSort:2,
-					ProblemType:"多选题",
-					ProblemOption:["多选项A","多选项B","多选项C","多选项D"]
-				},{
-					ProblemId:2,
-					ProblemName:"问题名字",
-					ProblemSort:3,
-					ProblemType:"填空题",
-					ProblemOption:[]
+					ProblemType:"题型"
 				}],
 				questionary:{
 					questionId:20225731,
@@ -70,50 +48,83 @@
 					questionAllFill:577,
 					questionCompleteFill:0
 				},
-				nowIndex:0,
-				radioValue:"",
-				checkboxValue:[],
-				textareaValue:"",
-				answer:[]
+				answerList:[],
+				nowSuccess:0
 			}
 		},
 		onLoad() {
-
+			//获取问卷信息
+			this.getQuestionaryMessage()
+			//获取问题信息
+			this.getProblemMessage()
+			
 		},
 		methods: {
-			//保存问题答案
-			ProblemPreserve(){
-				let success=false
-				console.log(this.problem[this.nowIndex].ProblemId)
-				
-				if(this.problem[this.nowIndex].ProblemType==='单选题'&&this.radioValue.length!=0){
-					this.answer[this.nowIndex]={problemId:this.problem[this.nowIndex].ProblemId,value:this.radioValue}
-					success=true
-					this.radioValue=""
+			//获取问卷信息
+			getQuestionaryMessage(){
+				//获取问卷信息
+				//传参: questionId
+				// 返回: Array<{
+				// 	questionId:Number,questionName:String,questionState:String
+				// 	questionRange:String,questionStartTime:String,questionEndTime:String,
+				// 	questionAllFill:Number,questionCompleteFill:Number
+				// }>
+				this.questionary={
+					questionId:20225731,
+					questionName:"问卷名称",
+					questionState:"已经开始",
+					questionRange:"理工农学院",
+					questionStartTime:"2018-8-27 9:00",
+					questionEndTime:"2018-8-27 18:00",
+					questionAllFill:577,
+					questionCompleteFill:0
 				}
-				else if(this.problem[this.nowIndex].ProblemType==='多选题'&&this.checkboxValue.length!=0){
-					this.answer[this.nowIndex]={problemId:this.problem[this.nowIndex].ProblemId,value:this.checkboxValue}
-					success=true
-					this.checkboxValue=""
-				}
-				else if(this.problem[this.nowIndex].ProblemType==='填空题'&&this.textareaValue.length!=0){
-					this.answer[this.nowIndex]={problemId:this.problem[this.nowIndex].ProblemId,value:this.textareaValue}
-					success=true
-					this.textareaValue=""
-				}
-				return success
 			},
-			//下一题
-			nowIndexNext(){
-				this.ProblemPreserve()
-				this.nowIndex=this.nowIndex+1
+			getProblemMessage(){
+				//获取问题信息
+				//传参: questionId
+				//返回: Array<{problemId:Number,problemName:String,problemType:String}>
+				this.problemList=[
+					{
+						problemId:0,
+						problemName:"问题名字",
+						problemType:"单选题"
+					},{
+						problemId:1,
+						problemName:"问题名字",
+						problemType:"多选题"
+					},{
+						problemId:2,
+						problemName:"问题名字",
+						problemType:"填空题"
+					}
+				]
+			},
+			//获取子组件传来的答案
+			setSelect(newSelect){
+				let i
+				for(i=0;i<this.answerList.length;i++)
+				{
+					if(this.answerList[i].problemId===newSelect.problemId){
+						this.answerList.splice(i,1,newSelect)
+						break
+					}
+				}
+				if(i===this.answerList.length){
+					this.answerList.push(newSelect)
+				}
+				this.nowSuccess=0
+				for(let j=0;j<this.answerList.length;j++){
+					if(this.answerList[j].selectId.length!=0||this.answerList[j].selectTextarea!=""){
+						this.nowSuccess=this.nowSuccess+1
+					}
+				}
 			},
 			//提交问卷
 			questionaryComplete(){
-				this.ProblemPreserve()
-				//传入参数: answer:Array<{problemId:Number,value:any}>,questionId:Number,userId:Number
+				//传入参数: answerList:Array<{problemId:Number,selectId:Array<Number>,selectTextarea:String}>,questionId:Number,userId:Number
 				//返回值: 无
-				console.log(this.answer,this.questionId,this.userId)
+				
 				//回调函数success
 				uni.navigateTo({url:"/pages/fillQuestionary/success"})
 				//回调函数error
@@ -131,6 +142,10 @@
 		align-content: center;
 		align-items: center;
 		padding: 20rpx 0;
+		&::after{
+			height: 80rpx;
+			content: "";
+		}
 		#questionaryName{
 			font-size: 48rpx;
 			font-weight: bold;
@@ -138,23 +153,25 @@
 		}
 		#questionaryProblems{
 			width: 700rpx;
-			margin-top: 30rpx;
 			.questionaryProblem{
 				margin: 20rpx 0;
+				.questionaryProblemItem{
+					margin-top: 64rpx;
+				}
 				.ProblemMessage{
 					font-size: 36rpx;
 					font-weight: bold;
 					color: #3399ff;
 				}
 				.ProblemContent{
-					margin-top: 20rpx;
+					margin-top: 12rpx;
 				}
 			}
-			#questionaryProblemsBtns{
-				position: fixed;
-				bottom: 0;
-				width: 700rpx;
-			}
+		}
+		#questionarySubmitButton{
+			position: fixed;
+			bottom: 0;
+			width: 750rpx;
 		}
 	}
 </style>

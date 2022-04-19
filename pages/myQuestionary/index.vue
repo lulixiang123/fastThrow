@@ -40,13 +40,13 @@
 		
 		methods: {
 			//请求用户所有问卷
-			//传入参数: userId
-			//返回值: Array<{questionId:number,questionName:string,......}>
+			//传参: userId
+			//返回: Array<{questionId:number,questionName:string,......}>
 			getQuestionary(){
 			},
 			//搜索用户问卷
-			//传入参数: searchText,userId
-			//返回值: Array<{questionId:number,questionName:string,......}>
+			//传参: searchText,userId
+			//返回: Array<{questionId:number,questionName:string,......}>
 			questionarySearch(){
 				
 			}
