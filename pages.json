@@ -1,0 +1,72 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/myQuestionary/index",
+			"style": {
+				"navigationBarTitleText": "我的问卷"
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "用户登录"
+			}
+		},
+		{
+			"path": "pages/detailsQuestionary/index",
+			"style": {
+				"navigationBarTitleText": "问卷详情"
+			}
+		},
+		{
+			"path": "pages/fillQuestionary/index",
+			"style": {
+				"navigationBarTitleText": "问卷填写"
+			}
+		},
+		{
+			"path": "pages/myConfig/index",
+			"style": {
+				"navigationBarTitleText": "个人设置"
+			}
+		},
+		{
+			"path": "pages/fillQuestionary/success",
+			"style": {
+				"navigationBarTitleText": "成功提交"
+			}
+		},
+		{
+			"path": "pages/fillQuestionary/error",
+			"style": {
+				"navigationBarTitleText": "提交失败"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "未命名!",
+		"navigationBarBackgroundColor": "#3399ff",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar":{
+		"backgroundColor":"#3399ff",
+		"color":"white",
+		"selectedColor":"#F3A151",
+		"borderStyle":"black",
+		"list":[
+			{
+				"pagePath":"pages/myQuestionary/index",
+				"iconPath":"static/myQuestionary.png",
+				"selectedIconPath":"static/myQuestionarySelect.png",
+				"text":"我的问卷"
+			},
+			{
+				"pagePath":"pages/myConfig/index",
+				"iconPath":"static/myConfig.png",
+				"selectedIconPath":"static/myConfigSelect.png",
+				"text":"个人中心"
+			}
+		]
+	}
+}
